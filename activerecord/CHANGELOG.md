@@ -1,3 +1,9 @@
+*   Add optional `order_before_validation` option to `has_many` to sort the collection by an attribute before validation to keep track of valdation errors.
+
+    If you add new objects via an Rails API to an `has_many` association via nested attributes and you would like to keep the order of the collection sorted by an attribute the matching of the errors via `index_errors` to form input´s can be hard. You can add an `order` attribute that you set manually on client side after re-ordering or adding new items and order the collection before validation. Validation errors can easily assigned to the associated input´s in the form via the index.
+
+    *André Hester*
+
 *   Fix `bin/rails db:setup` and `bin/rails db:test:prepare` create  wrong
     ar_internal_metadata's data for a test database.
 

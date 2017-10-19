@@ -447,6 +447,7 @@ ActiveRecord::Schema.define do
   create_table :line_items, force: true do |t|
     t.integer :invoice_id
     t.integer :amount
+    t.integer :order
   end
 
   create_table :lions, force: true do |t|

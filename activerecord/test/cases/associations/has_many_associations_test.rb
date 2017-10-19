@@ -2543,6 +2543,30 @@ class HasManyAssociationsTest < ActiveRecord::TestCase
     end
   end
 
+  def test_collection_ordered_before_validation
+    klass = Class.new(ActiveRecord::Base) do
+      self.table_name = :invoices
+      has_many :line_items, autosave: true, order_before_validation: :order
+
+      def self.name
+        "Invoice"
+      end
+    end
+    invoice = klass.create
+
+    first_line = invoice.line_items.create(amount: 10, order: 1)
+    second_line = invoice.line_items.create(amount: 10, order: 2)
+    third_line = invoice.line_items.create(amount: 10, order: 3)
+
+    # insert a new line item and update order
+    new_line = invoice.line_items.build(order: 2)
+    invoice.line_items[1].order = 3
+    invoice.line_items[2].order = 4
+    invoice.validate
+
+    assert_equal [first_line, new_line, second_line, third_line], invoice.line_items.target
+  end
+
   class AuthorWithErrorDestroyingAssociation < ActiveRecord::Base
     self.table_name = "authors"
     has_many :posts_with_error_destroying,

@@ -312,6 +312,9 @@ module ActiveRecord
       # +reflection+.
       def validate_collection_association(reflection)
         if association = association_instance_get(reflection.name)
+          if reflection.options[:order_before_validation].present?
+            association.target = association.target.sort_by(&reflection.options[:order_before_validation].to_sym)
+          end
           if records = associated_records_to_validate_or_save(association, new_record?, reflection.options[:autosave])
             records.each_with_index { |record, index| association_valid?(reflection, record, index) }
           end
